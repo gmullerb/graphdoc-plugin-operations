@@ -1,0 +1,87 @@
+{
+  "name": "graphdoc-plugin-operations",
+  "description": "GraphQL documentation using graphdoc with Isolated Operations",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Gonzalo Müller Bravo",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "homepage": "https://graphdoc-plugins.github.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gmullerb/graphdoc-plugin-operations"
+  },
+  "bugs": {
+    "url": "https://github.com/gmullerb/graphdoc-plugin-operations/issues"
+  },
+  "keywords": [
+    "graphdoc-plugin-operations",
+    "graphql",
+    "graphql-js",
+    "documentation",
+    "comments",
+    "graphdoc",
+    "graphdoc-plugin",
+    "operations",
+    "plugin",
+    "schema",
+    "config",
+    "markdown",
+    "guide",
+    "syntax",
+    "comment",
+    "operation",
+    "doc",
+    "parser",
+    "generator",
+    "swagger",
+    "jsdoc"
+  ],
+  "scripts": {
+    "lint.any": "echo ==== Lint Any ====  && eslint --config .eslintrc-any.json  \"**/[\\.a-zA-Z]*.+(js|json|yml|sh|txt|md)\" \"**/.+(|gitignore|npmignore)\" --ignore-pattern \"build\"",
+    "lint.js": "echo ==== Lint JS Code ==== && eslint --config .eslintrc-js.json --color \"lib/**/*.js\"",
+    "lint.test": "echo ==== Lint Test Code ==== && eslint --config .eslintrc-test.json --color \"tests/**/*.js\"",
+    "lint": "npm run lint.any && npm run lint.js && npm run lint.test",
+    "test": "echo ==== Test ==== && jest",
+    "prepack": "echo ==== Build Package ====",
+    "check": "npm install && npm run lint && npm run test && mkdir -p build && cd build && npm pack ../",
+    "prepublishOnly": "npm run check"
+  },
+  "peerDependencies": {
+    "@2fd/graphdoc": "2.4.0",
+    "marked": "*"
+  },
+  "devDependencies": {
+    "@2fd/graphdoc": "2.4.0",
+    "any-eslint-parser": "^1.0.0",
+    "eslint": "^7.27.0",
+    "eslint-plugin-base-style-config": "^2.8.0",
+    "eslint-plugin-regex": "^1.7.0",
+    "jest": "^27.0.1"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "lib/**"
+    ],
+    "coverageDirectory": "build/coverage",
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
+      }
+    },
+    "coverageReporters": [
+      "lcov",
+      "text",
+      "text-summary"
+    ]
+  }
+}

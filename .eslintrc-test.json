@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "./.eslintrc-any.json",
+    "plugin:base-style-config/regex[test]"
+  ],
+  "env":{
+    "jasmine": true
+  },
+  "rules": {
+    "max-lines": "off",
+    "max-statements": "off"
+  }
+}
