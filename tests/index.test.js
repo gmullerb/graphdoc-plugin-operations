@@ -16,8 +16,7 @@ it('should use default options', function() {
   const plugin = new GraphdocPluginOperations.default(schema, {}, {})
 
   expect(plugin.baseUrl).toEqual('')
-  expect(plugin.documentTitle).toEqual('Description')
-  expect(plugin.extractDescription).toEqual(true)
+  expect(plugin.documentTitle).toEqual('Definition')
   expect(plugin.navigationTitle).toEqual('Operations')
   expect(plugin.getHeaders).not.toEqual(undefined)
   expect(plugin.getAssets).not.toEqual(undefined)
@@ -39,14 +38,12 @@ it('should use new options', function() {
     'graphdoc-plugin-operations': {
       documentTitle: 'Description2',
       navigationTitle: 'Operations2',
-      enableAssets: false,
-      extractDescription: false
+      enableAssets: false
     }
   }, {})
 
   expect(plugin.baseUrl).toEqual('some')
   expect(plugin.documentTitle).toEqual('Description2')
-  expect(plugin.extractDescription).toEqual(false )
   expect(plugin.navigationTitle).toEqual('Operations2')
   expect(plugin.getHeaders).toEqual(undefined)
   expect(plugin.getAssets).toEqual(undefined)
@@ -177,6 +174,91 @@ it('should not add new types when empty Query', function() {
   expect(schema.types.map(type => type.name)).toEqual(expect.arrayContaining(['someInput', 'Query']))
 })
 
+it('should create documents with empty description', function() {
+  const queryType = { name: 'Query',
+    type: {
+      kind: 'OBJECT'
+    },
+    fields: [{
+      name: 'op1',
+      type: {
+        name: 'fieldType',
+        kind: 'OBJECT'
+      },
+      args: [{
+        name: 'arg1',
+        description: 'arg1Desc',
+        type: {
+          name: 'argType',
+          kind: 'SCALAR'
+        }
+      }]
+    }, {
+      name: 'op2',
+      description: 'op2Desc',
+      type: {
+        name: 'fieldType',
+        kind: 'OBJECT'
+      },
+      args: [{
+        name: 'arg1',
+        description: 'arg1Desc',
+        type: {
+          name: 'argType',
+          kind: 'SCALAR'
+        }
+      }]
+    }
+  ] }
+  const mutationType = { name: 'Mutation',
+    type: {
+      kind: 'OBJECT'
+    },
+    fields: [{
+      name: 'op1',
+      description: 'op1Desc',
+      type: {
+        name: 'fieldType',
+        kind: 'OBJECT'
+      },
+      args: [{
+        name: 'arg1',
+        description: 'arg1Desc',
+        type: {
+          name: 'argType',
+          kind: 'SCALAR'
+        }
+      }]
+    }, {
+      name: 'op2',
+      description: 'op2Desc',
+      type: {
+        name: 'fieldType',
+        kind: 'OBJECT'
+      },
+      args: [{
+        name: 'arg1',
+        description: 'arg1Desc',
+        type: {
+          name: 'argType',
+          kind: 'SCALAR'
+        }
+      }]
+    }
+  ] }
+  const schema = {
+    types: [{ name: 'someInput' }, queryType, mutationType]
+  }
+  const plugin = new GraphdocPluginOperations.default(schema, {}, {})
+  expect(plugin.operations.size).toBe(4)
+
+  const document = plugin.getDocuments('Query.op1')
+
+  expect(document[0].title).toEqual('Definition')
+  expect(document[0].description.indexOf('<p>op1Desc</p>')).toBe(-1)
+  expect(document[0].description.indexOf('<code class=\"highlight\"><ul class=\"code\" style=\"padding-left:28px\"><li><span class=\"tab\"><span class=\"comment line\"># Arguments</span></span></li><li><span class=\"tab\"><span class=\"comment line\">#   <strong>arg1</strong>: arg1Desc</span></span></li><li><span class=\"tab\"><span class=\"meta\">op1</span>(<span class=\"meta\">arg1</span>: <a class=\"support type\" href=\"argtype.doc.html\">argType</a>): <a class=\"support type\" href=\"fieldtype.doc.html\">fieldType</a> </span></li></ul></code>')).not.toBe(-1)
+})
+
 it('should create documents', function() {
   const queryType = { name: 'Query',
     type: {
@@ -258,179 +340,8 @@ it('should create documents', function() {
 
   const document = plugin.getDocuments('Query.op1')
 
-  expect(document[0].title).toEqual('Description')
-  expect(document[0].description.indexOf('<p>op1Desc</p>')).not.toBe(-1)
-  expect(document[0].description.indexOf('<code class=\"highlight\"><ul class=\"code\" style=\"padding-left:28px\"><li><span class=\"tab\"><span class=\"comment line\"># Arguments</span></span></li><li><span class=\"tab\"><span class=\"comment line\">#   <strong>arg1</strong>: arg1Desc</span></span></li><li><span class=\"tab\"><span class=\"meta\">op1</span>(<span class=\"meta\">arg1</span>: <a class=\"support type\" href=\"argtype.doc.html\">argType</a>): <a class=\"support type\" href=\"fieldtype.doc.html\">fieldType</a> </span></li></ul></code>')).not.toBe(-1)
-})
-
-it('should create documents with empty description', function() {
-  const queryType = { name: 'Query',
-    type: {
-      kind: 'OBJECT'
-    },
-    fields: [{
-      name: 'op1',
-      type: {
-        name: 'fieldType',
-        kind: 'OBJECT'
-      },
-      args: [{
-        name: 'arg1',
-        description: 'arg1Desc',
-        type: {
-          name: 'argType',
-          kind: 'SCALAR'
-        }
-      }]
-    }, {
-      name: 'op2',
-      description: 'op2Desc',
-      type: {
-        name: 'fieldType',
-        kind: 'OBJECT'
-      },
-      args: [{
-        name: 'arg1',
-        description: 'arg1Desc',
-        type: {
-          name: 'argType',
-          kind: 'SCALAR'
-        }
-      }]
-    }
-  ] }
-  const mutationType = { name: 'Mutation',
-    type: {
-      kind: 'OBJECT'
-    },
-    fields: [{
-      name: 'op1',
-      description: 'op1Desc',
-      type: {
-        name: 'fieldType',
-        kind: 'OBJECT'
-      },
-      args: [{
-        name: 'arg1',
-        description: 'arg1Desc',
-        type: {
-          name: 'argType',
-          kind: 'SCALAR'
-        }
-      }]
-    }, {
-      name: 'op2',
-      description: 'op2Desc',
-      type: {
-        name: 'fieldType',
-        kind: 'OBJECT'
-      },
-      args: [{
-        name: 'arg1',
-        description: 'arg1Desc',
-        type: {
-          name: 'argType',
-          kind: 'SCALAR'
-        }
-      }]
-    }
-  ] }
-  const schema = {
-    types: [{ name: 'someInput' }, queryType, mutationType]
-  }
-  const plugin = new GraphdocPluginOperations.default(schema, {}, {})
-  expect(plugin.operations.size).toBe(4)
-
-  const document = plugin.getDocuments('Query.op1')
-
-  expect(document[0].title).toEqual('Description')
-  expect(document[0].description.indexOf('<p>op1Desc</p>')).toBe(-1)
-  expect(document[0].description.indexOf('<code class=\"highlight\"><ul class=\"code\" style=\"padding-left:28px\"><li><span class=\"tab\"><span class=\"comment line\"># Arguments</span></span></li><li><span class=\"tab\"><span class=\"comment line\">#   <strong>arg1</strong>: arg1Desc</span></span></li><li><span class=\"tab\"><span class=\"meta\">op1</span>(<span class=\"meta\">arg1</span>: <a class=\"support type\" href=\"argtype.doc.html\">argType</a>): <a class=\"support type\" href=\"fieldtype.doc.html\">fieldType</a> </span></li></ul></code>')).not.toBe(-1)
-})
-
-it('should create documents without extracting description', function() {
-  const queryType = { name: 'Query',
-    type: {
-      kind: 'OBJECT'
-    },
-    fields: [{
-      name: 'op1',
-      description: 'op1Desc',
-      type: {
-        name: 'fieldType',
-        kind: 'OBJECT'
-      },
-      args: [{
-        name: 'arg1',
-        description: 'arg1Desc',
-        type: {
-          name: 'argType',
-          kind: 'SCALAR'
-        }
-      }]
-    }, {
-      name: 'op2',
-      description: 'op2Desc',
-      type: {
-        name: 'fieldType',
-        kind: 'OBJECT'
-      },
-      args: [{
-        name: 'arg1',
-        description: 'arg1Desc',
-        type: {
-          name: 'argType',
-          kind: 'SCALAR'
-        }
-      }]
-    }
-  ] }
-  const mutationType = { name: 'Mutation',
-    type: {
-      kind: 'OBJECT'
-    },
-    fields: [{
-      name: 'op1',
-      description: 'op1Desc',
-      type: {
-        name: 'fieldType',
-        kind: 'OBJECT'
-      },
-      args: [{
-        name: 'arg1',
-        description: 'arg1Desc',
-        type: {
-          name: 'argType',
-          kind: 'SCALAR'
-        }
-      }]
-    }, {
-      name: 'op2',
-      description: 'op2Desc',
-      type: {
-        name: 'fieldType',
-        kind: 'OBJECT'
-      },
-      args: [{
-        name: 'arg1',
-        description: 'arg1Desc',
-        type: {
-          name: 'argType',
-          kind: 'SCALAR'
-        }
-      }]
-    }
-  ] }
-  const schema = {
-    types: [{ name: 'someInput' }, queryType, mutationType]
-  }
-  const plugin = new GraphdocPluginOperations.default(schema, { 'graphdoc-plugin-operations': { extractDescription: false } }, {})
-  expect(plugin.operations.size).toBe(4)
-
-  const document = plugin.getDocuments('Query.op1')
-
-  expect(document[0].title).toEqual('Description')
-  expect(document[0].description.indexOf('<code class="highlight"><ul class="code" style="padding-left:28px"><li><span class="tab"><span class="comment line">#   op1Desc</span></span></li><li><span class="tab"><span class="comment line"># </span></span></li><li><span class="tab"><span class="comment line"># Arguments</span></span></li><li><span class="tab"><span class="comment line">#   <strong>arg1</strong>: arg1Desc</span></span></li><li><span class="tab"><span class="meta">op1</span>(<span class="meta">arg1</span>: <a class="support type" href="argtype.doc.html">argType</a>): <a class="support type" href="fieldtype.doc.html">fieldType</a> </span></li></ul></code>')).not.toBe(-1)
+  expect(document[0].title).toEqual('Definition')
+  expect(document[0].description.indexOf('<code class="highlight"><ul class="code" style="padding-left:28px"><li><span class="tab"><span class="comment line"># Arguments</span></span></li><li><span class="tab"><span class="comment line">#   <strong>arg1</strong>: arg1Desc</span></span></li><li><span class="tab"><span class="meta">op1</span>(<span class="meta">arg1</span>: <a class="support type" href="argtype.doc.html">argType</a>): <a class="support type" href="fieldtype.doc.html">fieldType</a> </span></li></ul></code>')).not.toBe(-1)
 })
 
 it('should not create documents', function() {
