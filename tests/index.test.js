@@ -470,3 +470,221 @@ it('should create navigations', function() {
       text: 'Query.op2'
     }])
 })
+
+describe('with some eraseByRegex', function () {
+  const eraseByNameRegex = '\\w*2$'
+  const eraseByDescriptionRegex = '@RemoveFromDocumentation'
+  const fields = [{
+      name: 'op1',
+      description: 'op1Desc @RemoveFromDocumentation'
+    }, {
+      name: 'op2',
+      description: 'op2Desc'
+    },
+    {
+      name: 'aop1',
+      description: 'aop1Desc @RemoveFromDocumentation'
+    }, {
+      name: 'aop2',
+      description: 'aop2Desc'
+    }
+  ]
+
+  it('should add new types when available for Query and erase by name', function() {
+    const queryType = { name: 'Query', fields }
+    const schema = {
+      types: [{ name: 'someInput' }, queryType]
+    }
+
+    const plugin = new GraphdocPluginOperations.default(schema, { 'graphdoc-plugin-operations': { eraseByNameRegex } }, {})
+
+    expect(plugin.operations.size).toBe(2)
+    expect(plugin.operations.get('Query.op1')).toEqual({
+      name: 'Query.op1',
+      description: 'op1Desc @RemoveFromDocumentation',
+      operationName: 'op1',
+      parent: queryType,
+      kind: 'OPERATION',
+      inputFields: null,
+      interfaces: [],
+      enumValues: null,
+      possibleTypes: null
+    })
+    expect(plugin.operations.get('Query.aop1')).toEqual({
+      name: 'Query.aop1',
+      description: 'aop1Desc @RemoveFromDocumentation',
+      operationName: 'aop1',
+      parent: queryType,
+      kind: 'OPERATION',
+      inputFields: null,
+      interfaces: [],
+      enumValues: null,
+      possibleTypes: null
+
+    })
+    expect(schema.types).toHaveLength(4)
+    expect(schema.types.map(type => type.name)).toEqual(expect.arrayContaining(['someInput', 'Query', 'Query.op1', 'Query.aop1']))
+  })
+
+  it('should add new types when available for Mutation and erase by name', function() {
+    const mutationType = { name: 'Mutation', fields }
+    const schema = {
+      types: [{ name: 'someInput' }, mutationType]
+    }
+
+    const plugin = new GraphdocPluginOperations.default(schema, { 'graphdoc-plugin-operations': { eraseByNameRegex } }, {})
+
+    expect(plugin.operations.size).toBe(2)
+    expect(plugin.operations.get('Mutation.op1')).toEqual({
+      name: 'Mutation.op1',
+      description: 'op1Desc @RemoveFromDocumentation',
+      operationName: 'op1',
+      parent: mutationType,
+      kind: 'OPERATION',
+      inputFields: null,
+      interfaces: [],
+      enumValues: null,
+      possibleTypes: null
+    })
+    expect(plugin.operations.get('Mutation.aop1')).toEqual({
+      name: 'Mutation.aop1',
+      description: 'aop1Desc @RemoveFromDocumentation',
+      operationName: 'aop1',
+      parent: mutationType,
+      kind: 'OPERATION',
+      inputFields: null,
+      interfaces: [],
+      enumValues: null,
+      possibleTypes: null
+
+    })
+    expect(schema.types).toHaveLength(4)
+    expect(schema.types.map(type => type.name)).toEqual(expect.arrayContaining(['someInput', 'Mutation', 'Mutation.op1', 'Mutation.aop1']))
+  })
+
+  it('should add new types when available for Query and erase by description', function() {
+    const queryType = { name: 'Query', fields }
+    const schema = {
+      types: [{ name: 'someInput' }, queryType]
+    }
+
+    const plugin = new GraphdocPluginOperations.default(schema, { 'graphdoc-plugin-operations': { eraseByDescriptionRegex } }, {})
+
+    expect(plugin.operations.size).toBe(2)
+    expect(plugin.operations.get('Query.op2')).toEqual({
+      name: 'Query.op2',
+      description: 'op2Desc',
+      operationName: 'op2',
+      parent: queryType,
+      kind: 'OPERATION',
+      inputFields: null,
+      interfaces: [],
+      enumValues: null,
+      possibleTypes: null
+    })
+    expect(plugin.operations.get('Query.aop2')).toEqual({
+      name: 'Query.aop2',
+      description: 'aop2Desc',
+      operationName: 'aop2',
+      parent: queryType,
+      kind: 'OPERATION',
+      inputFields: null,
+      interfaces: [],
+      enumValues: null,
+      possibleTypes: null
+
+    })
+    expect(schema.types).toHaveLength(4)
+    expect(schema.types.map(type => type.name)).toEqual(expect.arrayContaining(['someInput', 'Query', 'Query.op2', 'Query.aop2']))
+  })
+
+  it('should add new types when available for Mutation and erase by description', function() {
+    const mutationType = { name: 'Mutation', fields }
+    const schema = {
+      types: [{ name: 'someInput' }, mutationType]
+    }
+
+    const plugin = new GraphdocPluginOperations.default(schema, { 'graphdoc-plugin-operations': { eraseByDescriptionRegex } }, {})
+
+    expect(plugin.operations.size).toBe(2)
+    expect(plugin.operations.get('Mutation.op2')).toEqual({
+      name: 'Mutation.op2',
+      description: 'op2Desc',
+      operationName: 'op2',
+      parent: mutationType,
+      kind: 'OPERATION',
+      inputFields: null,
+      interfaces: [],
+      enumValues: null,
+      possibleTypes: null
+    })
+    expect(plugin.operations.get('Mutation.aop2')).toEqual({
+      name: 'Mutation.aop2',
+      description: 'aop2Desc',
+      operationName: 'aop2',
+      parent: mutationType,
+      kind: 'OPERATION',
+      inputFields: null,
+      interfaces: [],
+      enumValues: null,
+      possibleTypes: null
+
+    })
+    expect(schema.types).toHaveLength(4)
+    expect(schema.types.map(type => type.name)).toEqual(expect.arrayContaining(['someInput', 'Mutation', 'Mutation.op2', 'Mutation.aop2']))
+  })
+
+  it('should add new types when available for Query and erase by name or description', function() {
+    const queryType = { name: 'Query', fields: [ ...fields, {
+      name: 'op3',
+      description: 'op3Desc'
+    }] }
+    const schema = {
+      types: [{ name: 'someInput' }, queryType]
+    }
+
+    const plugin = new GraphdocPluginOperations.default(schema, { 'graphdoc-plugin-operations': { eraseByNameRegex, eraseByDescriptionRegex } }, {})
+
+    expect(plugin.operations.size).toBe(1)
+    expect(plugin.operations.get('Query.op3')).toEqual({
+      name: 'Query.op3',
+      description: 'op3Desc',
+      operationName: 'op3',
+      parent: queryType,
+      kind: 'OPERATION',
+      inputFields: null,
+      interfaces: [],
+      enumValues: null,
+      possibleTypes: null
+    })
+    expect(schema.types).toHaveLength(3)
+    expect(schema.types.map(type => type.name)).toEqual(expect.arrayContaining(['someInput', 'Query', 'Query.op3']))
+  })
+
+  it('should add new types when available for Mutation and erase by name or description', function() {
+    const mutationType = { name: 'Mutation', fields: [ ...fields, {
+      name: 'op3',
+      description: 'op3Desc'
+    }] }
+    const schema = {
+      types: [{ name: 'someInput' }, mutationType]
+    }
+
+    const plugin = new GraphdocPluginOperations.default(schema, { 'graphdoc-plugin-operations': { eraseByNameRegex, eraseByDescriptionRegex } }, {})
+
+    expect(plugin.operations.size).toBe(1)
+    expect(plugin.operations.get('Mutation.op3')).toEqual({
+      name: 'Mutation.op3',
+      description: 'op3Desc',
+      operationName: 'op3',
+      parent: mutationType,
+      kind: 'OPERATION',
+      inputFields: null,
+      interfaces: [],
+      enumValues: null,
+      possibleTypes: null
+    })
+    expect(schema.types).toHaveLength(3)
+    expect(schema.types.map(type => type.name)).toEqual(expect.arrayContaining(['someInput', 'Mutation', 'Mutation.op3']))
+  })
+})

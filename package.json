@@ -1,7 +1,7 @@
 {
   "name": "graphdoc-plugin-operations",
   "description": "GraphQL schema HTML documentation generation, using graphdoc with Isolated Operations",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "MIT",
   "author": "Gonzalo Müller Bravo",
   "main": "lib/index.js",

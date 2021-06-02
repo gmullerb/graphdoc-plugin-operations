@@ -25,7 +25,7 @@ __________________
 ```json
   "devDependencies": {
     "@2fd/graphdoc": "2.4.0",
-    "graphdoc-plugin-operations": "2.0.0",
+    "graphdoc-plugin-operations": "2.1.0",
     "graphdoc-plugin-flexible": "1.0.2",
 ```
 
@@ -38,6 +38,8 @@ __________________
   "graphdoc-plugin-operations": {
     "documentTitle": "The Description",
     "navigationTitle": "The Operations",
+    "eraseByNameRegex": "^someOperation\\w*",
+    "eraseByDescriptionRegex": "@RemoveFromDocumentation",
     "enableAssets": false
   }
 }
@@ -54,15 +56,18 @@ __________________
   "graphdoc-plugin-flexible": {
     "document.schema": { "disable": true }
   },
+  "graphdoc-plugin-schema": {
+    "enableAssets": false
+  },
   "devDependencies": {
     "@2fd/graphdoc": "2.4.0",
     "graphdoc-plugin-flexible": "1.0.2",
-    "graphdoc-plugin-operations": "2.0.0",
+    "graphdoc-plugin-operations": "2.1.0",
     "graphdoc-plugin-schema": "2.0.0",
 ```
 
 > `graphdoc-plugin-flexible` is required to disable `document.schema` plugin and  allow custom types.  
-> `graphdoc-plugin-schema` will substitute disabled `document.schema` plugin when required.  
+> `graphdoc-plugin-schema` will substitute disabled `document.schema` plugin when required, and `"enableAssets": false` to avoid assets duplication.  
 > `graphdoc/../../` this is required to get external plugins working in `graphdoc`.
 
 __________________
@@ -82,6 +87,8 @@ __________________
   "graphdoc-plugin-operations": {
     "documentTitle": "Description",
     "navigationTitle": "Operations",
+    "eraseByNameRegex": "^$",
+    "eraseByDescriptionRegex": "^$",
     "enableAssets": true
   }
 }
@@ -89,7 +96,10 @@ __________________
 
 * `documentTitle`: title of the document section.
 * `navigationTitle`: title of the operations section in the navigation.
+* `eraseByNameRegex`: Regular Expression to be used to remove operations, based on `name`.
+* `eraseByDescriptionRegex`: Regular Expression to be used to remove operations, based on `description`.
 * `enableAssets`: if set to `false`, then it will disable all the assets provided by the plugin, i.e. script and css files will not be included.
+  * `graphdoc-plugin-operations` uses exactly the same assets that `graphdoc-plugin-schema` and `document-schema` use.
 
 The following shows where the `documentTitle`, the `navigationTitle` and the "code block" are located, using the example documentation created by [`graphdoc`](https://www.npmjs.com/package/@2fd/graphdoc), [Pokemon GraphQL HTML Documentation](https://2fd.github.io/graphdoc/pokemon/pokemonattack.doc.html), using [Pokemon GraphQL schema](https://github.com/lucasbento/graphql-pokemon):
 
@@ -115,7 +125,7 @@ The following shows where the `documentTitle`, the `navigationTitle` and the "co
   "devDependencies": {
     "@2fd/graphdoc": "2.4.0",
     "graphdoc-plugin-flexible": "1.0.2",
-    "graphdoc-plugin-operations": "2.0.0",
+    "graphdoc-plugin-operations": "2.1.0",
     "graphdoc-plugin-schema": "2.0.0",
 ```
 
@@ -139,7 +149,7 @@ __________________
 
 * [`"@2fd/graphdoc": "2.4.0"`](https://www.npmjs.com/package/@2fd/graphdoc/v/2.4.0).
 
-> graphdoc can work with older versions of GraphQL (description syntax: #), and new versions (description syntax: """), [How to configure graphdoc](https://graphdoc-plugins.github.io/docs/how-to-configure-graphdoc.html).  
+> graphdoc can work with older versions of GraphQL (description syntax: #), and new versions (description syntax: """), [How to configure graphdoc](https://graphdoc-plugins.github.io/docs/how-to-configure-graphdoc.html).
 
 __________________
 
