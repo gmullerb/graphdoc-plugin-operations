@@ -25,7 +25,7 @@ __________________
 ```json
   "devDependencies": {
     "@2fd/graphdoc": "2.4.0",
-    "graphdoc-plugin-operations": "2.1.0",
+    "graphdoc-plugin-operations": "2.2.0",
     "graphdoc-plugin-flexible": "1.0.2",
 ```
 
@@ -40,6 +40,7 @@ __________________
     "navigationTitle": "The Operations",
     "eraseByNameRegex": "^someOperation\\w*",
     "eraseByDescriptionRegex": "@RemoveFromDocumentation",
+    "extractParametersDoc": false,
     "enableAssets": false
   }
 }
@@ -62,7 +63,7 @@ __________________
   "devDependencies": {
     "@2fd/graphdoc": "2.4.0",
     "graphdoc-plugin-flexible": "1.0.2",
-    "graphdoc-plugin-operations": "2.1.0",
+    "graphdoc-plugin-operations": "2.2.0",
     "graphdoc-plugin-schema": "2.0.0",
 ```
 
@@ -89,6 +90,7 @@ __________________
     "navigationTitle": "Operations",
     "eraseByNameRegex": "^$",
     "eraseByDescriptionRegex": "^$",
+    "extractParametersDoc": true,
     "enableAssets": true
   }
 }
@@ -98,12 +100,23 @@ __________________
 * `navigationTitle`: title of the operations section in the navigation.
 * `eraseByNameRegex`: Regular Expression to be used to remove operations, based on `name`.
 * `eraseByDescriptionRegex`: Regular Expression to be used to remove operations, based on `description`.
+* `extractParametersDoc`: if set to false, parameters documentation will be stay on operation declaration.
 * `enableAssets`: if set to `false`, then it will disable all the assets provided by the plugin, i.e. script and css files will not be included.
   * `graphdoc-plugin-operations` uses exactly the same assets that `graphdoc-plugin-schema` and `document-schema` use.
 
-The following shows where the `documentTitle`, the `navigationTitle` and the "code block" are located, using the example documentation created by [`graphdoc`](https://www.npmjs.com/package/@2fd/graphdoc), [Pokemon GraphQL HTML Documentation](https://2fd.github.io/graphdoc/pokemon/pokemonattack.doc.html), using [Pokemon GraphQL schema](https://github.com/lucasbento/graphql-pokemon):
+The following shows where the `documentTitle`, the `navigationTitle` and the "code block" are located, using the example documentation created by [`graphdoc`](https://www.npmjs.com/package/@2fd/graphdoc), [Pokemon GraphQL HTML Documentation](https://gmullerb.gitlab.io/base-graphdoc-yarn/pokemonattack.doc.html), using [Pokemon GraphQL schema](https://github.com/lucasbento/graphql-pokemon):
 
 ![Graphdoc sections](docs/graphdoc-sections.svg)
+
+### Extracted Parameters Documentation
+
+Extracted
+
+![extracted](docs/extracted-parameters.svg)
+
+Not Extracted
+
+![extracted](docs/not-extracted-parameters.svg)
 
 ## Using/Configuration
 
@@ -125,7 +138,7 @@ The following shows where the `documentTitle`, the `navigationTitle` and the "co
   "devDependencies": {
     "@2fd/graphdoc": "2.4.0",
     "graphdoc-plugin-flexible": "1.0.2",
-    "graphdoc-plugin-operations": "2.1.0",
+    "graphdoc-plugin-operations": "2.2.0",
     "graphdoc-plugin-schema": "2.0.0",
 ```
 
@@ -134,8 +147,8 @@ The following shows where the `documentTitle`, the `navigationTitle` and the "co
 * `main.mustache` template may need some changes in other to get a better view, e.g.:
 
     *&#123;&#123;#type}}  
-      &#123;&#123;^type.methodName}}&#60;p class="slds-text-title--caps slds-text-color--weak">&#123;&#123;type.kind}}&#60;/p>&#123;&#123;/type.methodName}}  
-      &#123;&#123;#type.methodName}}&#60;p class="slds-text-title--caps slds-text-color--weak">Operation&#60;/p>&#123;&#123;/type.methodName}}  
+      &#123;&#123;^type.operationName}}&#60;p class="slds-text-title--caps slds-text-color--weak">&#123;&#123;type.kind}}&#60;/p>&#123;&#123;/type.operationName}}  
+      &#123;&#123;#type.operationName}}&#60;p class="slds-text-title--caps slds-text-color--weak">Operation&#60;/p>&#123;&#123;/type.operationName}}  
     &#123;&#123;/type}}*
 
 ## Online Examples
